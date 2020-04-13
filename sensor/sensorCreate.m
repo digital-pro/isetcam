@@ -222,6 +222,15 @@ switch sensorName
         sensor = sensorSet(sensor,'wave',wave);
         sensor = sensorCustom(sensor,filterPattern,filterFile);
         sensor = sensorSet(sensor,'size',sensorSize);
+    case {'file'}
+        % sensorCreate('file',filename)
+        % The filename must contain a sensor struct
+        %
+        if isempty(varargin), error('File name must be provided');
+        else, fname = varargin{1};
+        end
+        load(fname,'sensor');
+        
     case {'fourcolor'}  % Often used for multiple channel
         % sensorCreate('custom',pixel,filterPattern,filterFile);
         if length(varargin) >= 1, filterPattern = varargin{1};
