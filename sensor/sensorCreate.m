@@ -42,48 +42,59 @@ function sensor = sensorCreate(sensorName,pixel,varargin)
 %                  should probably use ISETBIO if you are here.  This is
 %                  likely to be deprecated some day.
 %
-% See also: sensorReadColorFilters, sensorCreateIdeal
-%
-% Examples:
-%  Default Bayer RGGB
-%   sensor = sensorCreate;
-%   sensor = sensorCreate('default');
-%  
-%  Other types of Bayer arrays
-%   sensor = sensorCreate('bayer (ycmy)');
-%   sensor = sensorCreate('bayer (rggb)');
-%
-%  A monochrome sensor
-%   sensor = sensorCreate('Monochrome');
-%
-%  A light field sensor matched to an OI rendered from PBRT.  Note that oi
-%  is passed instead of pixel
-%   sensor = sensorCreate('light field',oi);
-%
-%  Human style sensors (but see ISETBIO for more complete control)
-%   cone   = pixelCreate('human cone'); 
-%   sensor = sensorCreate('Monochrome',cone);
-%   sensor = sensorCreate('human');
-%
-%   params.sz = [128,192];
-%   params.rgbDensities = [0.1 .6 .2 .1]; % Empty, L,M,S
-%   params.coneAperture = [3 3]*1e-6;     % In meters
-%   pixel = [];
-%   sensor = sensorCreate('human',pixel,params);
-%   sensorConePlot(sensor)
-%
-%  More details specified
-%   filterOrder = [1 2 3; 4 5 2; 3 1 4];
-%   wave = 400:2:700;
-%   filterFile = fullfile(isetRootPath,'data','sensor','colorfilters','sixChannel.mat');
-%   pixel = pixelCreate('default',wave);
-%   sensorSize = [256 256];
-%   sensor = sensorCreate('custom',pixel,filterOrder,filterFile,sensorSize,wave)
-%
-% See also:  sensorCreateIdeal
+% Examples:  ieExamplesPrint('sensorCreate');
 %
 % Copyright ImagEval Consultants, LLC, 2005
+%
+% See also:  
+%    sensorReadColorFilters, sensorCreateIdeal
+%
 
+% Examples:
+%{
+%  Default Bayer RGGB
+   sensor = sensorCreate;
+   sensor = sensorCreate('default');
+%}
+%{ 
+%  Other types of Bayer arrays
+   sensor = sensorCreate('bayer (ycmy)');
+   sensor = sensorCreate('bayer (rggb)');
+%}
+%{
+%  A monochrome sensor
+   sensor = sensorCreate('Monochrome');
+%}
+%{
+ % A light field sensor matched to an OI rendered from PBRT.  Note that oi
+ %  is passed instead of pixel
+ sensor = sensorCreate('light field',oi);
+%}
+%{
+%  Human style sensors (but see ISETBIO for more complete control)
+  cone   = pixelCreate('human cone'); 
+  sensor = sensorCreate('Monochrome',cone);
+  sensor = sensorCreate('human');
+%}
+%{
+  params.sz = [128,192];
+  params.rgbDensities = [0.1 .6 .2 .1]; % Empty, L,M,S
+  params.coneAperture = [3 3]*1e-6;     % In meters
+  pixel = [];
+  sensor = sensorCreate('human',pixel,params);
+  sensorConePlot(sensor)
+%}
+%{
+%  More details specified
+   filterOrder = [1 2 3; 4 5 2; 3 1 4];
+   wave = 400:2:700;
+   filterFile = fullfile(isetRootPath,'data','sensor','colorfilters','sixChannel.mat');
+   pixel = pixelCreate('default',wave);
+   sensorSize = [256 256];
+   sensor = sensorCreate('custom',pixel,filterOrder,filterFile,sensorSize,wave)
+%}
+
+%% Parse parameters
 if ieNotDefined('sensorName'), sensorName = 'default'; end
 
 sensor.name = [];
@@ -98,6 +109,7 @@ else
     sensor = sensorSet(sensor,'pixel',pixel);
 end
 
+%% Initialization
 % The sensor should always inherit the spectrum of the pixel.  Probably
 % there should only be one spectrum here, not one for pixel and sensor.
 sensor = sensorSet(sensor,'spectrum',pixelGet(pixel,'spectrum'));
@@ -118,6 +130,7 @@ sensor = sensorSet(sensor,'gainFPNimage',[]);
 sensor = sensorSet(sensor,'gainFPNimage',[]);
 sensor = sensorSet(sensor,'quantization','analog');
 
+%% Main case statement
 sensorName = ieParamFormat(sensorName);
 switch sensorName
     case {'default','color','bayer','rgb','bayer(grbg)','bayer-grbg','bayergrbg'}
