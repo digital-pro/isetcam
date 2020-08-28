@@ -12,6 +12,22 @@ function ieCloseRequestFcn
 % to empty before exiting.
 if (gcf == ieSessionGet('graph window')), ieSessionSet('graph window',[]); end
 
-closereq;
+try
+    if isdeployed % for some reason figures aren't going away in compiled code, so experiment
+        selection = questdlg('Close this plot?', ...
+            'Close Request Function', ...
+            'Yes', 'No', 'Yes');
+        switch selection
+            case 'Yes'
+                delete(gcf);
+            case 'No'
+        end
+    else
+        closereq;
+    end
+catch 
+    delete(gcf);
+    closereq;
+end
 
 return;

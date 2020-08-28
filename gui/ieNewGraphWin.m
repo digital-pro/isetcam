@@ -60,7 +60,11 @@ if ieNotDefined('titleString'), titleString = 'ISET GraphWin'; end
 
 thisWindow.Name = titleString;
 thisWindow.NumberTitle = 'Off';
-thisWindow.CloseRequestFcn = 'ieCloseRequestFcn';
+if isdeployed % might be true we can't access via char array when compiled?
+    thisWindow.CloseRequestFcn = @ieCloseRequestFcn;
+else
+    thisWindow.CloseRequestFcn = 'ieCloseRequestFcn';
+end
 thisWindow.Color = [1 1 1];
 thisWindow.Units = 'normalized';
 
